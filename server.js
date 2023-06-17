@@ -3,9 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const util = require('util');
 
-const readFileAsync = util.promisify(fs.readFile);
-const writeFileAsync = util.promisify(fs.writeFile);
-
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -19,31 +16,37 @@ app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
-);
-
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/index.html'))
 );
+
+
+
+//API Routes 
+app.get('/api/notes', (req, res) => {
+    fs.readFile('./db/db.json', 'utf8', (error, data) => {
+        error ? res.json(error) : res.json(data)
+    })
+ });
+
+  app.post('/api/notes', function(req, res){
+    const { title, text, id } = req.body;
+    fs.readFile('./db/db.json', (req,res) => {
+        if (req.body) {
+            const newNote = {
+              title, 
+              text,
+              id: uuidv4(),
+            };
+        readAndAppend(newNote, './db/db.json');
+        fs.writeFile('./db/db.json', res.json(newNote))
+    })
+  })
+
+app.delete
 
 //Listening
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
-
-//API Routes 
-app.get('/api/notes', (req, res) => {
-    readFileAsync('./db/db.json')
-   
-      });
-  });
-
-  app.post('/api/notes', function(req, res){
-    const note = req.body;
-    readFileAsync('./db/db.json', (req,res) => {
-
-    })
-  })
-
-app.delete
+//read,uuid, push(append), write,send note,res.json
