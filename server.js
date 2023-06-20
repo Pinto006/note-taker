@@ -2,7 +2,7 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
-const util = require('util');
+// const util = require('util');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -30,23 +30,31 @@ app.get('/api/notes', (req, res) => {
     })
  });
 
-  app.post('/api/notes', function(req, res){
+app.post('/api/notes', function (req, res) {
     const { title, text, id } = req.body;
-    fs.readFile('./db/db.json', (req,res) => {
+    fs.readFile('./db/db.json', (req, res) => {
         if (req.body) {
             const newNote = {
-              title, 
-              text,
-              id, uuidv4(),
+                title,
+                text,
+                id, uuidv4(),
             };
-        readAndAppend(newNote, './db/db.json');
-        fs.writeFile('./db/db.json', res.json())
+            readAndAppend(newNote, './db/db.json');
+            fs.writeFile('./db/db.json', JSON.stringify(newNote));
+            res.json(newNote);
+        }
     })
-  })
+})
 
 app.delete('/api/notes/:id', (req, res) => {
-    cont
-})
+    let data = fs.readFileSync('db/db.json', 'utf8');
+    const jsonData = JSON.parse(data);
+    const newNote = jsonData.filter((note) => {
+        return note.id !== req.params.id;
+    });
+    fs.writeFileSync('db/db.json', JSON.stringify(newNote))
+    res.json("note deleted");
+});
 
 //Listening
 app.listen(PORT, () =>
