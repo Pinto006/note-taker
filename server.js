@@ -1,4 +1,5 @@
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
@@ -36,14 +37,16 @@ app.get('/api/notes', (req, res) => {
             const newNote = {
               title, 
               text,
-              id: uuidv4(),
+              id, uuidv4(),
             };
         readAndAppend(newNote, './db/db.json');
-        fs.writeFile('./db/db.json', res.json(newNote))
+        fs.writeFile('./db/db.json', res.json())
     })
   })
 
-app.delete
+app.delete('/api/notes/:id', (req, res) => {
+    cont
+})
 
 //Listening
 app.listen(PORT, () =>
