@@ -31,13 +31,13 @@ app.get('/api/notes', (req, res) => {
  });
 
 app.post('/api/notes', function (req, res) {
-    const { title, text, id } = req.body;
+    const { title, text } = req.body;
     fs.readFile('./db/db.json', (req, res) => {
         if (req.body) {
             const newNote = {
                 title,
                 text,
-                id, uuidv4(),
+                id: uuidv4()
             };
             readAndAppend(newNote, './db/db.json');
             fs.writeFile('./db/db.json', JSON.stringify(newNote));
