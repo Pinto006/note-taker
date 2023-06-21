@@ -17,7 +17,7 @@ app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-app.get('*', (req, res) =>
+app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 
@@ -32,14 +32,14 @@ app.get('/api/notes', (req, res) => {
 
 app.post('/api/notes', function (req, res) {
     const { title, text } = req.body;
-    fs.readFile('./db/db.json', (req, res) => {
+    fs.readFile('./db/db.json', (error, data) => {
         if (req.body) {
             const newNote = {
                 title,
                 text,
                 id: uuidv4()
             };
-            readAndAppend(newNote, './db/db.json');
+            fs.readAndAppend(newNote, './db/db.json');
             fs.writeFile('./db/db.json', JSON.stringify(newNote));
             res.json(newNote);
         }
