@@ -4,17 +4,17 @@ const {
     readFromFile,
     readAndAppend,
     writeToFile,
-  } = require('./helpers/fsUtils');
+  } = require('../helpers/fsUtils.js');
 
 // GET Route for retrieving all the Notes
-api.get('/', (req, res) => {
+api.get('/notes', (req, res) => {
     readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
   });
   
   // GET Route for a specific notes
   api.get('/:note_id', (req, res) => {
     const noteId = req.params.note_id;
-    readFromFile('./db/note.json')
+    readFromFile('./db/db.json')
       .then((data) => JSON.parse(data))
       .then((json) => {
         const result = json.filter((note) => note.note_id === noteId);
@@ -25,14 +25,14 @@ api.get('/', (req, res) => {
   });
   
   // DELETE Route for a specific notes
-  api.delete('/:note_id', (req, res) => {
+  api.delete('/notes/:note_id', (req, res) => {
     const noteId = req.params.note_id;
     readFromFile('./db/db.json')
       .then((data) => JSON.parse(data))
       .then((json) => {
         // Make a new array of all notes except the one with the ID provided in the URL
-        const result = json.filter((note) => note.note_id !== noteId);
-  
+        const result = json.filter((note) => req.params.note_id !== noteId);
+        console.log(json);
         // Save that array to the filesystem
         writeToFile('./db/db.json', result);
   
@@ -42,7 +42,7 @@ api.get('/', (req, res) => {
   });
   
   // POST Route for a new UX/UI note
-  api.post('/', (req, res) => {
+  api.post('/notes', (req, res) => {
     console.log(req.body);
   
     const { title,text } = req.body;
