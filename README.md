@@ -7,7 +7,7 @@ This application allows the user to write, store, delete and review notes.  The 
   
 
 ## Usage
-Heroku URL:
+Heroku URL:https://note-taker12345676-1361323b839a.herokuapp.com
 
 ![Alt text](images/Screenshot.png)
 
